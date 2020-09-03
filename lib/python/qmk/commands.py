@@ -11,7 +11,7 @@ from milc import cli
 import qmk.keymap
 
 
-def create_make_command(keyboard, keymap, target=None, dry_run=False):
+def create_make_command(keyboard, keymap, target=None):
     """Create a make compile command
 
     Args:
@@ -25,9 +25,6 @@ def create_make_command(keyboard, keymap, target=None, dry_run=False):
         target
             Usually a bootloader.
 
-        dry_run
-            make -n -- don't actually build
-
     Returns:
 
         A command that can be run to make the specified keyboard and keymap
@@ -38,10 +35,7 @@ def create_make_command(keyboard, keymap, target=None, dry_run=False):
     if target:
         make_args.append(target)
 
-    if dry_run:
-        return [make_cmd, '-n', ':'.join(make_args)]
-    else:
-        return [make_cmd, ':'.join(make_args)]
+    return [make_cmd, ':'.join(make_args)]
 
 
 def compile_configurator_json(user_keymap, bootloader=None):

@@ -225,7 +225,6 @@ void mousekey_on(uint8_t code) {
         mousekey_accel |= (1 << 1);
     else if (code == KC_MS_ACCEL2)
         mousekey_accel |= (1 << 2);
-
 }
 
 void mousekey_off(uint8_t code) {

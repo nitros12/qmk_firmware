@@ -27,21 +27,11 @@ extern int      COMBO_LEN;
 
 __attribute__((weak)) void process_combo_event(uint16_t combo_index, bool pressed) {}
 
-#ifdef COMBO_MUST_HOLD_PER_COMBO
-__attribute__((weak)) bool get_combo_must_hold(uint16_t index, combo_t *combo) { return false; }
-#endif
-
-#ifdef COMBO_TERM_PER_COMBO
-__attribute__((weak)) uint16_t get_combo_term(uint16_t index, combo_t *combo) { return COMBO_TERM; }
-#endif
-
-static uint16_t timer                 = 0;
-static uint16_t  prepared_combo_index = -1;
-static bool     is_active             = true;
-static bool     b_combo_enable        = true;  // defaults to enabled
-static combo_t  *prepared_combo       = NULL;
-static uint16_t longest_term          = 0;
-#define COMBO_PREPARED (prepared_combo && !prepared_combo->disabled)
+static uint16_t timer               = 0;
+static uint16_t current_combo_index = 0;
+static bool     drop_buffer         = false;
+static bool     is_active           = false;
+static bool     b_combo_enable      = true;  // defaults to enabled
 
 static uint8_t buffer_size = 0;
 static keyrecord_t key_buffer[MAX_COMBO_LENGTH];
@@ -122,8 +112,8 @@ void fire_combo(void) {
         combo->state &= ~(1 << key); \
     } while (0)
 
-static bool process_single_combo(combo_t *combo, uint16_t keycode, keyrecord_t *record, uint16_t combo_index) {
-    uint8_t count = 0;
+static bool process_single_combo(combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+    uint8_t  count = 0;
     uint16_t index = -1;
     /* Find index of keycode and number of combo keys */
     for (const uint16_t *keys = combo->keys;; ++count) {

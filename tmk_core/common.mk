@@ -132,12 +132,6 @@ ifeq ($(strip $(BLUETOOTH)), AdafruitBLE)
 	TMK_COMMON_DEFS += -DNO_USB_STARTUP_CHECK
 endif
 
-ifeq ($(strip $(BLUETOOTH)), AdafruitEZKey)
-	TMK_COMMON_DEFS += -DBLUETOOTH_ENABLE
-	TMK_COMMON_DEFS += -DMODULE_ADAFRUIT_EZKEY
-    TMK_COMMON_DEFS += -DNO_USB_STARTUP_CHECK
-endif
-
 ifeq ($(strip $(BLUETOOTH)), RN42)
 	TMK_COMMON_DEFS += -DBLUETOOTH_ENABLE
 	TMK_COMMON_DEFS += -DMODULE_RN42
@@ -160,16 +154,13 @@ ifeq ($(strip $(SHARED_EP_ENABLE)), yes)
 endif
 
 ifeq ($(strip $(LTO_ENABLE)), yes)
-    LINK_TIME_OPTIMIZATION_ENABLE = yes
-endif
-
-ifeq ($(strip $(LINK_TIME_OPTIMIZATION_ENABLE)), yes)
     ifeq ($(PLATFORM),CHIBIOS)
         $(info Enabling LTO on ChibiOS-targeting boards is known to have a high likelihood of failure.)
-        $(info If unsure, set LINK_TIME_OPTIMIZATION_ENABLE = no.)
+        $(info If unsure, set LTO_ENABLE = no.)
     endif
     EXTRAFLAGS += -flto
-    TMK_COMMON_DEFS += -DLINK_TIME_OPTIMIZATION_ENABLE
+    TMK_COMMON_DEFS += -DLTO_ENABLE
+    TMK_COMMON_DEFS += -DLINK_TIME_OPTIMIZATON_ENABLE
 endif
 
 # Search Path
